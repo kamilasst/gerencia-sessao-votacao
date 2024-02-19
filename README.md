@@ -1,0 +1,1 @@
+# gerencia-sessao-votacao
