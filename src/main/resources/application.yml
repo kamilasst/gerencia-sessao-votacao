@@ -1,0 +1,12 @@
+spring:
+    datasource:
+     url: jdbc:postgresql://localhost:5432/gerencia-sessao-votacao-db-2
+     username: user
+     password: 123456
+     driver-class-name: org.postgresql.Driver
+    jpa:
+     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  servlet:
+    context-path: /gerencia
