@@ -14,6 +14,6 @@ public interface VotoRepository extends JpaRepository<Voto, Long> {
     @Query("SELECT COUNT(v) > 0 FROM Voto v WHERE v.associado.cpf = :cpf AND v.pauta.titulo = :tituloPauta")
     boolean associadoJaVotouPauta(@Param("cpf") final String cpf, final String tituloPauta);
 
-    @Query("SELECT v FROM Voto v INNER JOIN v.pauta p WHERE p.titulo = :tituloPauta")
-    List<Voto> resultadoVotacao(String tituloPauta);
+    @Query("SELECT v FROM Voto v INNER JOIN v.pauta p WHERE p.titulo = :tituloPauta AND v.sessaoVotacao.titulo = :tituloSessao")
+    List<Voto> resultadoVotacao(@Param("tituloPauta") String tituloPauta, @Param("tituloSessao") String tituloSessao);
 }

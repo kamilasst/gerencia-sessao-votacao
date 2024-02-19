@@ -43,6 +43,10 @@ public class Voto {
     @JoinColumn(name = "ID_PAUTA", nullable = false)
     private Pauta pauta;
 
+    @ManyToOne
+    @JoinColumn(name = "ID_SESSAO_VOTACAO", nullable = false)
+    private SessaoVotacao sessaoVotacao;
+
     @Column(name = "VOTO", nullable = false)
     @Enumerated(EnumType.STRING)
     private VotoEnum voto;
@@ -55,11 +59,11 @@ public class Voto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Voto voto1 = (Voto) o;
-        return Objects.equals(associado, voto1.associado) && Objects.equals(pauta, voto1.pauta) && voto == voto1.voto && Objects.equals(dataVoto, voto1.dataVoto);
+        return Objects.equals(associado, voto1.associado) && Objects.equals(pauta, voto1.pauta) && Objects.equals(sessaoVotacao, voto1.sessaoVotacao) && voto == voto1.voto && Objects.equals(dataVoto, voto1.dataVoto);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(associado, pauta, voto, dataVoto);
+        return Objects.hash(associado, pauta, sessaoVotacao, voto, dataVoto);
     }
 }

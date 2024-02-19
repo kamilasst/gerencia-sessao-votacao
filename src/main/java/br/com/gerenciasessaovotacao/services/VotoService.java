@@ -1,10 +1,7 @@
 package br.com.gerenciasessaovotacao.services;
 
 import br.com.gerenciasessaovotacao.controllers.dtos.voto.*;
-import br.com.gerenciasessaovotacao.domains.models.Associado;
-import br.com.gerenciasessaovotacao.domains.models.Pauta;
-import br.com.gerenciasessaovotacao.domains.models.Voto;
-import br.com.gerenciasessaovotacao.domains.models.VotoEnum;
+import br.com.gerenciasessaovotacao.domains.models.*;
 import br.com.gerenciasessaovotacao.exceptions.ErroConstantes;
 import br.com.gerenciasessaovotacao.exceptions.NegocioException;
 import br.com.gerenciasessaovotacao.respositories.VotoRepository;
@@ -42,23 +39,29 @@ public class VotoService implements IVotoService {
         Pauta pauta = pautaService.findByTitulo(votoRequest.getTituloPauta());
         pautaService.validarNaoExiste(pauta);
 
-        validarSessaoVotacaoAberta(pauta.getId(), pauta.getTitulo(), LocalDateTime.now());
+        SessaoVotacao sessaoVotacao = sessaoVotacaoService.findByTituloEPauta(votoRequest.getTituloSessao(), pauta.getId());
+        sessaoVotacaoService.validarNaoExiste(sessaoVotacao);
+
+        validarSessaoVotacaoAberta(pauta.getId(), pauta.getTitulo(), votoRequest.getTituloSessao(), LocalDateTime.now());
         validarAssociadoJaVotouPauta(votoRequest.getCpfAssociado(), votoRequest.getTituloPauta());
 
         Voto voto = Voto.builder().associado(associado).
-                pauta(pauta).voto(votoRequest.getVoto()).
+                pauta(pauta).sessaoVotacao(sessaoVotacao).voto(votoRequest.getVoto()).
                 dataVoto(LocalDateTime.now()).build();
 
         votoRepository.save(voto);
 
-        return VotoResponse.builder().associadoInfo("Associado info: " + associado.toString()).
-                pautaInfo("Pauta info: " + pauta).
-                voto(voto.getVoto()).
-                dataVoto(voto.getDataVoto()).build();
+        return VotoResponse.builder()
+                .associadoInfo("Associado info: " + associado.toString())
+                .sessaoInfo("Sessao Votacao info: " + sessaoVotacao)
+                .pautaInfo("Pauta info: " + pauta)
+                .voto(voto.getVoto())
+                .dataVoto(voto.getDataVoto())
+                .build();
     }
 
-    private void validarSessaoVotacaoAberta(final Long pautaId, final String tituloPauta,final LocalDateTime dataAtual) {
-        if (!sessaoVotacaoService.isSessaoVotacaoAberta(pautaId, dataAtual)) {
+    private void validarSessaoVotacaoAberta(final Long pautaId, final String tituloPauta, final String tituloSessao, final LocalDateTime dataAtual) {
+        if (!sessaoVotacaoService.isSessaoVotacaoAberta(pautaId, tituloSessao, dataAtual)) {
             throw new NegocioException(String.format(ErroConstantes.SESSAO_VOTACAO_FECHADA, tituloPauta));
         }
     }
@@ -75,7 +78,7 @@ public class VotoService implements IVotoService {
 
     @Override
     public ResultadoVotacaoResponse resultadoVotacao(final ResultadoVotacaoRequest resultadoVotacaoRequest) {
-        List<Voto> votos = votoRepository.resultadoVotacao(resultadoVotacaoRequest.getTituloPauta());
+        List<Voto> votos = votoRepository.resultadoVotacao(resultadoVotacaoRequest.getTituloPauta(), resultadoVotacaoRequest.getTituloSessao());
 
         ResultadoCalculoVotos resultadoCalculoVotos = calcularvotos(votos);
         return ResultadoVotacaoResponse.builder()

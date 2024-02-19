@@ -16,6 +16,8 @@ public class VotoResponse {
 
     private String associadoInfo;
 
+    private String sessaoInfo;
+
     private String pautaInfo;
 
     private VotoEnum voto;

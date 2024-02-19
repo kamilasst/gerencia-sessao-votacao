@@ -18,6 +18,9 @@ public class VotoRequest {
     private String cpfAssociado;
 
     @NotBlank
+    private String tituloSessao;
+
+    @NotBlank
     private String tituloPauta;
 
     @NotNull

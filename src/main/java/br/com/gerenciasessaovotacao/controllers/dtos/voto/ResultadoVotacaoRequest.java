@@ -14,4 +14,7 @@ public class ResultadoVotacaoRequest {
 
     @NotBlank
     private String tituloPauta;
+
+    @NotBlank
+    private String tituloSessao;
 }

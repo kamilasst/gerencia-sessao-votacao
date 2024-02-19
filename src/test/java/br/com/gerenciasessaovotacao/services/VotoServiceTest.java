@@ -6,6 +6,7 @@ import br.com.gerenciasessaovotacao.domains.models.Associado;
 import br.com.gerenciasessaovotacao.domains.models.Pauta;
 import br.com.gerenciasessaovotacao.domains.models.Voto;
 import br.com.gerenciasessaovotacao.domains.models.VotoEnum;
+import br.com.gerenciasessaovotacao.exceptions.ErroConstantes;
 import br.com.gerenciasessaovotacao.respositories.VotoRepository;
 import br.com.gerenciasessaovotacao.testutils.TestesConstantes;
 import org.junit.jupiter.api.Assertions;
@@ -35,7 +36,10 @@ public class VotoServiceTest {
     void resultadoVotacaoCalcularVotosComSucesso(){
 
         //arrange
-        ResultadoVotacaoRequest resultadoVotacaoRequest = ResultadoVotacaoRequest.builder().tituloPauta(TestesConstantes.TITULO_PAUTA_12).build();
+        ResultadoVotacaoRequest resultadoVotacaoRequest = ResultadoVotacaoRequest.builder()
+                .tituloPauta(TestesConstantes.TITULO_PAUTA_12)
+                .tituloSessao(TestesConstantes.TITULO_SESSAO_1)
+                .build();
 
         Associado associado1 = Associado.builder()
                 .id(1L)
@@ -71,7 +75,7 @@ public class VotoServiceTest {
         votos.add(votoNao1);
         votos.add(votoSim2);
 
-        when(votoRepositoryMock.resultadoVotacao(resultadoVotacaoRequest.getTituloPauta())).thenReturn(votos);
+        when(votoRepositoryMock.resultadoVotacao(resultadoVotacaoRequest.getTituloPauta(), resultadoVotacaoRequest.getTituloSessao())).thenReturn(votos);
 
         //act
         ResultadoVotacaoResponse resultadoVotacaoResponse = votoService.resultadoVotacao(resultadoVotacaoRequest);

@@ -29,6 +29,9 @@ public class SessaoVotacaoService implements ISessaoVotacaoService {
 
         Pauta pauta = pautaService.findByTitulo(sessaoVotaocaoRequest.getTituloPauta());
         pautaService.validarNaoExiste(pauta);
+
+        validarSessaoParaPauta(pauta.getId(), sessaoVotaocaoRequest.getTitulo());
+
         LocalDateTime dataHoraFechamento = calcularDataFechamento(sessaoVotaocaoRequest.getDataHoraAbertura(),
                 sessaoVotaocaoRequest.getDataHoraFechamento());
         validarDatas(sessaoVotaocaoRequest.getDataHoraAbertura(),
@@ -53,6 +56,12 @@ public class SessaoVotacaoService implements ISessaoVotacaoService {
         return sessaoVotacaoResponse;
     }
 
+    private void validarSessaoParaPauta(final Long pautaId, final String tituloSessao) {
+        if (sessaoVotacaoRepository.existeSessaoParaPauta(pautaId,tituloSessao)){
+            throw new NegocioException(ErroConstantes.SESSAO_PARA_PAUTA_JA_EXISTE);
+        }
+    }
+
     private LocalDateTime calcularDataFechamento(final LocalDateTime dataHoraAbertura, final LocalDateTime dataHoraFechamento) {
         if (Objects.isNull(dataHoraFechamento)) {
             return dataHoraAbertura.plusMinutes(1);
@@ -69,7 +78,19 @@ public class SessaoVotacaoService implements ISessaoVotacaoService {
         }
     }
 
-    public boolean isSessaoVotacaoAberta(final Long pautaId, final LocalDateTime dataHora) {
-        return sessaoVotacaoRepository.isSessaoVotacaoAberta(pautaId, dataHora);
+    public boolean isSessaoVotacaoAberta(final Long pautaId, final String tituloSessao, final LocalDateTime dataHora) {
+        return sessaoVotacaoRepository.isSessaoVotacaoAberta(pautaId, tituloSessao, dataHora);
+    }
+
+    @Override
+    public SessaoVotacao findByTituloEPauta(final String titulo, final Long pautaId) {
+        return sessaoVotacaoRepository.findByTituloEPauta(titulo, pautaId);
+    }
+
+    @Override
+    public void validarNaoExiste(final SessaoVotacao sessaoVotacao) {
+        if (Objects.isNull(sessaoVotacao)) {
+            throw new NegocioException(ErroConstantes.SESSAO_VOTACAO_NAO_ENCONTRADA);
+        }
     }
 }

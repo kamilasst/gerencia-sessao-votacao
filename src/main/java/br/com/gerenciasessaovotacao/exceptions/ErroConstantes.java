@@ -11,6 +11,8 @@ public class ErroConstantes {
     public static final String PAUTA_JA_EXISTE = "Pauta já existe";
     public static final String ASSOCIADO_JA_VOTOU_PAUTA = "Associado já votou nesta pauta";
     public static final String SESSAO_VOTACAO_FECHADA = "Sessão de votação fechada para a pauta '%s'";
+    public static final String SESSAO_PARA_PAUTA_JA_EXISTE = "Sessão para Pauta já existe";
+    public static final String SESSAO_VOTACAO_NAO_ENCONTRADA = "Sessão não encontrada";
 
     private ErroConstantes(){}
 }
