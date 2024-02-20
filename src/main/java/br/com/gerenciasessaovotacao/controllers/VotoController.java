@@ -19,13 +19,13 @@ public class VotoController {
         this.votoService = votoService;
     }
 
-    @PostMapping
+    @PostMapping("/votar")
     public ResponseEntity<VotoResponse> votar(@Valid @RequestBody VotoRequest votoRequest) {
         VotoResponse votoResponse = votoService.votar(votoRequest);
         return ResponseEntity.ok().body(votoResponse);
     }
 
-    @GetMapping
+    @GetMapping("/resultadoVotacao")
     public ResponseEntity<ResultadoVotacaoResponse> resultadoVotacao(@Valid @RequestBody ResultadoVotacaoRequest votoTituloRequest){
         ResultadoVotacaoResponse resultadoVotacao = votoService.resultadoVotacao(votoTituloRequest);
         return ResponseEntity.ok().body(resultadoVotacao);
