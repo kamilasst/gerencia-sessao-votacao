@@ -59,7 +59,7 @@ curl --location 'http://localhost:8080/gerencia/pauta' \
 }'
 ```
 
-##### 3 - Criar/Abrir Sessão votação:
+##### 3 - Criar/Abrir Seção votação:
 Responsável por criar uma seção de votação para uma determinada Pauta na aplicação
 
 ```java
